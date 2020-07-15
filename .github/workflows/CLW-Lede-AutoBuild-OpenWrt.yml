@@ -1,7 +1,7 @@
 #=================================================
 # Description: Build lede using GitHub Actions
 # Lisence: MIT
-# Author: CLW
+# Author: CLW 
 #=================================================
 
 name: lede_Build_x86_64
