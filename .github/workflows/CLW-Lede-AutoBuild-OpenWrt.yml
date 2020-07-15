@@ -146,7 +146,7 @@ jobs:
     #  run: |
     #    git clone https://github.com/Lienol/openwrt-package package/lienol    
 
-    - name: Configuration Customization - Build_x86_64
+    - name: Configuration Customization - Build_Selection
       env:
         #設定配置
         #CONFIG_FILE: 'x86_64.config'
