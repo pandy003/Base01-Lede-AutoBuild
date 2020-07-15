@@ -180,7 +180,6 @@ jobs:
         cd openwrt && make defconfig
         
     - name: Download package
-      #working-directory: ./openwrt
       run: |
         cd openwrt
         make download -j$(nproc)
@@ -188,7 +187,6 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Build firmware
-      #working-directory: ./openwrt
       run: |
         cd openwrt
         echo -e "$(nproc) thread build."
