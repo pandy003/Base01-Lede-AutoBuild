@@ -163,13 +163,13 @@ jobs:
         #設定配置：lede（含 SSR Plus）↓
         #CONFIG_FILE: 'CLW_x86_64_lede.config'
         #設定配置：lede + passwall + openClash ↓
-        CONFIG_FILE: 'CLW_x86_64_base01.config'
+        #CONFIG_FILE: 'CLW_x86_64_base01.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + clash + Hello World ↓
         #CONFIG_FILE: 'CLW_x86_64_base02.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + clash + Hello World + adGuardhome + smartdns ↓
         #CONFIG_FILE: 'CLW_x86_64_base03.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + clash + Hello World + adGuardhome + smartdns + dockerman ↓
-        #CONFIG_FILE: 'CLW_x86_64_base04.config'
+        CONFIG_FILE: 'CLW_x86_64_base04.config'
         #設定配置：lede + passwall + openClash + transmission + adGuardhome + smartdns + dockerman + Hello World ↓
         #CONFIG_FILE: 'CLW_x86_64_base_CLW01.config'
         #(R7800)
