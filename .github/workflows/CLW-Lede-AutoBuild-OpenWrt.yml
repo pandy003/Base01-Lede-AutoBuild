@@ -4,7 +4,7 @@
 # Author: CLW 
 #=================================================
 
-name: lede_Build_x86_64
+name: CLW-Lede-AutoBuild-OpenWrt
 
 on: 
   release:
