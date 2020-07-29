@@ -4,7 +4,7 @@
 # Author: CLW 
 #=================================================
 
-name: CLW-Lede-AutoBuild-OpenWrt
+name: CLW-Lede-AutoBuild-x86_64
 
 on: 
   release:
@@ -33,6 +33,7 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        #原程式碼(二列)：用在 R7800 可編譯完成，但 x86_64 會編譯失敗，需增加eSir修正部份
         docker rmi `docker images -q`
         echo "Deleting files, please wait ..."
         sudo rm -rf \
