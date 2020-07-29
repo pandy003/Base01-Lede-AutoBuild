@@ -184,7 +184,7 @@ jobs:
         #設定配置：lede + passwall + openClash + transmission + frpc + clash + Hello World + adGuardhome + smartdns + dockerman ↓
         #CONFIG_FILE: 'CLW_R7800_base04.config'
         #設定配置：lede + passwall + openClash + transmission + adGuardhome + smartdns + dockerman ↓
-        #CONFIG_FILE: 'CLW_R7800_base04.config
+        #CONFIG_FILE: 'CLW_R7800_base_CLW01.config
         
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
