@@ -142,40 +142,34 @@ jobs:
         #CONFIG_FILE: 'CLW_x86_64_lede.config'
         #設定配置：lede + passwall + openClash ↓
         #CONFIG_FILE: 'CLW_x86_64_base01.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash ↓
+        #設定配置：lede + passwall + openClash + transmission + frpc ↓
         #CONFIG_FILE: 'CLW_x86_64_base02.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
-        #CONFIG_FILE: 'CLW_x86_64_base03.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
-        #CONFIG_FILE: 'CLW_x86_64_base04.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
-        #CONFIG_FILE: 'CLW_x86_64_base_CLW01.config'
+        #CONFIG_FILE: 'CLW_x86_64_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman + clash + Hello World ↓
+        #CONFIG_FILE: 'CLW_x86_64_base04.config'
         #(x86_AMD)
         #設定配置：lede（含 SSR Plus）↓
-        #CONFIG_FILE: 'CLW_x86_64_lede.config'
+        #CONFIG_FILE: 'CLW_x86_AMD_lede.config'
         #設定配置：lede + passwall + openClash ↓
-        #CONFIG_FILE: 'CLW_x86_64_base01.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash ↓
-        #CONFIG_FILE: 'CLW_x86_64_base02.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
-        #CONFIG_FILE: 'CLW_x86_64_base03.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
-        #CONFIG_FILE: 'CLW_x86_64_base04.config'
+        #CONFIG_FILE: 'CLW_x86_AMD_base01.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc ↓
+        #CONFIG_FILE: 'CLW_x86_AMD_base02.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
-        #CONFIG_FILE: 'CLW_x86_64_base_CLW01.config'
+        #CONFIG_FILE: 'CLW_x86_AMD_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman + clash + Hello World ↓
+        #CONFIG_FILE: 'CLW_x86_AMD_base04.config'
         #(R7800)
         #設定配置：lede（含 SSR Plus）↓
         #CONFIG_FILE: 'CLW_R7800_lede.config'
         #設定配置：lede + passwall + openClash ↓
-        #CONFIG_FILE: 'CLW_R7800_base01.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash  ↓
+        CONFIG_FILE: 'CLW_R7800_base01.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc ↓
         #CONFIG_FILE: 'CLW_R7800_base02.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
-        #CONFIG_FILE: 'CLW_R7800_base03.config'
-        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
-        CONFIG_FILE: 'CLW_R7800_base04.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
-        #CONFIG_FILE: 'CLW_R7800_base_CLW01.config
+        #CONFIG_FILE: 'CLW_R7800_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman + clash + Hello World ↓
+        #CONFIG_FILE: 'CLW_R7800_base04.config'
         
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
