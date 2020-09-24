@@ -1,0 +1,204 @@
+#=================================================
+# Description: Build lede using GitHub Actions
+# Lisence: MIT
+# Author: CLW
+#=================================================
+
+name: CLW-Lede-AutoBuild-R7800
+
+on: 
+  release:
+    types: [published]
+
+  #push:
+  #  branches: 
+  #    - master
+
+  #schedule:
+  #  - cron: 0 8 * * 5
+  
+  watch:
+    types: [started]
+
+env:
+  TZ: Asia/Taipei
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      #uses: actions/checkout@master
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        #原程式碼(二列)：用在 R7800 可編譯完成，但 x86_64 會編譯失敗，需增加eSir修正部份
+        sudo -E apt-get update
+        sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3.5 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget swig rsync iptables coreutils bash curl ca-certificates ipset ccache
+        
+    - name: Clone lede code
+      env: 
+        REPO_URL: https://github.com/coolsnowwolf/lede
+        REPO_BRANCH: master
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        #加入SSR Plus
+        sed -i '11s/#//' feeds.conf.default
+        sed -i '11a src-git lienol https://github.com/Lienol/openwrt-package' feeds.conf.default
+ 
+    - name: Clone openclash code
+      run: |
+        git clone https://github.com/chancat87/OpenClash.git
+        mv OpenClash/luci-app-openclash/ openwrt/package/
+        
+    - name: Clone clash code
+      run: |
+        cd openwrt/package
+        git clone https://github.com/frainzy1477/luci-app-clash.git
+        
+    - name: Clone Hello World code
+      run: |
+        cd openwrt/package/lean
+        #git lua-maxminddb 依赖
+        git clone https://github.com/jerrykuku/lua-maxminddb.git  
+        git clone https://github.com/jerrykuku/luci-app-vssr.git 
+        
+    - name: Clone adGuardhome code
+      run: |
+        cd openwrt/package
+        git clone https://github.com/rufengsuixing/luci-app-adguardhome.git
+                
+    - name: Clone dockerman code
+      run: |
+         git clone https://github.com/lisaac/luci-lib-docker.git
+         mv luci-lib-docker/collections/luci-lib-docker openwrt/package/
+         git clone https://github.com/lisaac/luci-app-dockerman.git
+         mv luci-app-dockerman/applications/luci-app-dockerman openwrt/package/
+         
+    - name: Fix dockerman code
+      run: |
+        cd openwrt/package/luci-app-dockerman
+        sed -i '17d' Makefile
+        sed -i '16a include $(TOPDIR)/feeds/luci/luci.mk' Makefile
+     
+    - name: Update feeds for smartdns
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        
+    - name: Clone smartdns code
+      run: |
+        cd openwrt
+        WORKINGDIR="`pwd`/feeds/packages/net/smartdns"
+        mkdir $WORKINGDIR -p
+        rm $WORKINGDIR/* -fr
+        wget https://github.com/pymumu/openwrt-smartdns/archive/master.zip -O $WORKINGDIR/master.zip
+        unzip $WORKINGDIR/master.zip -d $WORKINGDIR
+        mv $WORKINGDIR/openwrt-smartdns-master/* $WORKINGDIR/
+        rmdir $WORKINGDIR/openwrt-smartdns-master
+        rm $WORKINGDIR/master.zip
+  
+        LUCIBRANCH="lede"
+        WORKINGDIR="`pwd`/feeds/luci/applications/luci-app-smartdns"
+        mkdir $WORKINGDIR -p
+        rm $WORKINGDIR/* -fr
+        wget https://github.com/pymumu/luci-app-smartdns/archive/${LUCIBRANCH}.zip -O $WORKINGDIR/${LUCIBRANCH}.zip
+        unzip $WORKINGDIR/${LUCIBRANCH}.zip -d $WORKINGDIR
+        mv $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}/* $WORKINGDIR/
+        rmdir $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}
+        rm $WORKINGDIR/${LUCIBRANCH}.zip
+        
+    - name: Fix smartdns code
+      run: |
+        cd openwrt/feeds/luci/applications/luci-app-smartdns
+        sed -i '24d' Makefile
+        sed -i '23a include $(TOPDIR)/feeds/luci/luci.mk' Makefile
+        
+    - name: Fix compat code
+      run: |
+        cd openwrt/feeds/luci/modules/luci-compat
+        sed -i '17d' Makefile
+        sed -i '16a include $(TOPDIR)/feeds/luci/luci.mk' Makefile
+        
+    - name: Update & Install feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        #./scripts/feeds install -a
+        
+    - name: Configuration Customization - Build_Selection
+      env:
+        #設定配置
+        #CONFIG_FILE: 'x86_64.config'
+        #選一組要編譯的配置
+        #(x86_64)
+        #設定配置：lede（含 SSR Plus）↓
+        #CONFIG_FILE: 'CLW_x86_64_lede.config'
+        #設定配置：lede + passwall + openClash ↓
+        #CONFIG_FILE: 'CLW_x86_64_base01.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash ↓
+        #CONFIG_FILE: 'CLW_x86_64_base02.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
+        #CONFIG_FILE: 'CLW_x86_64_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
+        #CONFIG_FILE: 'CLW_x86_64_base04.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
+        #CONFIG_FILE: 'CLW_x86_64_base_CLW01.config'
+        #(x86_AMD)
+        #設定配置：lede（含 SSR Plus）↓
+        #CONFIG_FILE: 'CLW_x86_64_lede.config'
+        #設定配置：lede + passwall + openClash ↓
+        #CONFIG_FILE: 'CLW_x86_64_base01.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash ↓
+        #CONFIG_FILE: 'CLW_x86_64_base02.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
+        #CONFIG_FILE: 'CLW_x86_64_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
+        #CONFIG_FILE: 'CLW_x86_64_base04.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
+        #CONFIG_FILE: 'CLW_x86_64_base_CLW01.config'
+        #(R7800)
+        #設定配置：lede（含 SSR Plus）↓
+        #CONFIG_FILE: 'CLW_R7800_lede.config'
+        #設定配置：lede + passwall + openClash ↓
+        #CONFIG_FILE: 'CLW_R7800_base01.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash  ↓
+        #CONFIG_FILE: 'CLW_R7800_base02.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns ↓
+        #CONFIG_FILE: 'CLW_R7800_base03.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + clash + adGuardhome + smartdns + dockerman + Hello World ↓
+        CONFIG_FILE: 'CLW_R7800_base04.config'
+        #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
+        #CONFIG_FILE: 'CLW_R7800_base_CLW01.config
+        
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+    - name: Download package
+      run: |
+        cd openwrt
+        make download -j$(nproc)
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Build firmware
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s
+        #make -j1 V=s
+        
+    - name : Upload artifact
+      #uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
+      with:
+        name: OpenWrt
+        path: openwrt/bin
