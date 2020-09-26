@@ -96,11 +96,13 @@ jobs:
                 
     - name: Clone dockerman code
       run: |
-         git clone https://github.com/lisaac/luci-lib-docker.git
-         mv luci-lib-docker/collections/luci-lib-docker openwrt/package/
-         git clone https://github.com/lisaac/luci-app-dockerman.git
-         mv luci-app-dockerman/applications/luci-app-dockerman openwrt/package/
-         
+         #git clone https://github.com/lisaac/luci-lib-docker.git
+         #mv luci-lib-docker/collections/luci-lib-docker openwrt/package/
+         #git clone https://github.com/lisaac/luci-app-dockerman.git
+         #mv luci-app-dockerman/applications/luci-app-dockerman openwrt/package/
+         git clone https://github.com/lisaac/luci-lib-docker.git lede/package/luci-lib-docker
+         git clone https://github.com/lisaac/luci-app-dockerman.git lede/package/luci-app-dockerman
+ 
     - name: Fix dockerman code
       run: |
         cd openwrt/package/luci-app-dockerman
@@ -166,13 +168,13 @@ jobs:
         #設定配置：lede（含 SSR Plus）↓
         #CONFIG_FILE: 'CLW_x86_64_lede.config'
         #設定配置：lede + passwall + openClash ↓
-        CONFIG_FILE: 'CLW_x86_64_base01.config'
+        #CONFIG_FILE: 'CLW_x86_64_base01.config'
         #設定配置：lede + passwall + openClash + transmission + frpc ↓
         #CONFIG_FILE: 'CLW_x86_64_base02.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman ↓
         #CONFIG_FILE: 'CLW_x86_64_base03.config'
         #設定配置：lede + passwall + openClash + transmission + frpc + adGuardhome + smartdns + dockerman + clash + Hello World ↓
-        #CONFIG_FILE: 'CLW_x86_64_base04.config'
+        CONFIG_FILE: 'CLW_x86_64_base04.config'
         #(x86_AMD)
         #設定配置：lede（含 SSR Plus）↓
         #CONFIG_FILE: 'CLW_x86_AMD_lede.config'
